@@ -1,0 +1,4 @@
+Martes 16/10:
+
+3.15 PM
+intenté ver qué pasa con las frecuencias un poco pero está dificil ajustar o encontrar los picos para extraer una frecuencia si la señal es una cagada. En el archivo análisis_DAQ hay un intento de análisis pero que quedó por la mitad. CHARLAR MAÑANA MIÉRCOLES COMO QUEREMOS PRESENTAR ESTOS RESULTADOS. 
