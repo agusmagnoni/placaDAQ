@@ -27,16 +27,8 @@ with nidaqmx.Task() as task:
     #print(data)
     plt.plot(data,'.-')
 
-#%% frecuencia
-from scipy.optimize import curve_fit  
-import time
-fs=20000  
-t = np.linspace(0,1000/fs,num=1000)
-f = lambda t, amp, frec, fase, off: amp*np.sin(frec*t+fase) + off
 
-frecs=np.array([1000,5000,10000,15000,20000,30000,40000,50000,60000,70000])
-
-#%%
+#%% Frecuencia: A MANO MUY CACUIJA. 
 with nidaqmx.Task() as task:
     task.ai_channels.add_ai_voltage_chan("Dev1/ai1")
     #task.start()
@@ -44,8 +36,50 @@ with nidaqmx.Task() as task:
     data = task.read(number_of_samples_per_channel=1000)
     #print(data)
     plt.plot(data,'.-')
+    
 #%%  
 
 datos2.append(data)
+
+#%% Medir con varios canales. HAY QUE PENSAR QUE SEÑAL LE MANDAMOS PARA QUE SE VEA LA DIFERENCIA. 
+
+samples = 1000
+data = np.zeros([2,samples]) #row: channel / column: sample
+with nidaqmx.Task() as task:
+    task.in_stream.channels_to_read("Dev1/ai1","Dev1/ai0") #como catso llamo a los canales?
+    nidaqmx.stream_readers.AnalogMultiChannelReader.read_many_sample(data,number_of_samples_per_channel=samples) #esta función va llenando el numpy array con las mediciones. En las filas el channel, en las columnas las mediciones: una por sample. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
