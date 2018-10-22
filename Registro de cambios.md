@@ -1,0 +1,4 @@
+- Creo el archivo PyDAQ.py donde cargar los codigos listos.
+- Creo el notebook Test donde realizar tests de los codigos creados.
+- Mando todo lo que parece codigos y datos almacenados para el estudio de la frecuencia a una carpeta de MedicionesYDatos
+- Anoto en el readme el estado actual de las intenciones y planes
