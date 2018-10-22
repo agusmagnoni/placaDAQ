@@ -11,49 +11,95 @@ import matplotlib.pyplot as plt
 
 
 #import nidaqmx.system
+print("Nombre del dispositivo")
 system = nidaqmx.system.System.local()
 for device in system.devices:
     print(device)
+    #device.reset_device()#si quiero resetear los settings del chabon este
 
 #%%Resolución
 #Mientras mandamos una rampa muy lenta
 #ai0 y ai1 son los dos inputs analógicos del DAQ
+fs = 48000
+samples = 1000
 with nidaqmx.Task() as task:
-    task.ai_channels.add_ai_voltage_chan("Dev1/ai1")
+    task.ai_channels.add_ai_voltage_chan("Dev2/ai1")
     #task.start()
     print(task.timing.ai_conv_max_rate)
-    task.timing.cfg_samp_clk_timing(48000) # seteo la frecuencia de muestre
-    data = task.read(number_of_samples_per_channel=1000)
+    task.timing.cfg_samp_clk_timing(fs) # seteo la frecuencia de muestre
+    data = task.read(number_of_samples_per_channel=samples)
     #print(data)
-    plt.plot(data,'.-')
+    plt.plot(np.arange(samples)/fs, data,'.-')
 
 
 #%% Frecuencia: A MANO MUY CACUIJA. 
+nidaqmx.constants.TerminalConfiguration(10083)
 with nidaqmx.Task() as task:
-    task.ai_channels.add_ai_voltage_chan("Dev1/ai1")
+    a = task.ai_channels.add_ai_voltage_chan("Dev3/ai0")
+    a.ai_gain = 1
     #task.start()
-    task.timing.cfg_samp_clk_timing(30000) # seteo la frecuencia de muestreo
+    task.timing.cfg_samp_clk_timing(20000) # seteo la frecuencia de muestreo
     data = task.read(number_of_samples_per_channel=1000)
     #print(data)
-    plt.plot(data,'.-')
+    plt.plot(np.arange(1000)/20000,data,'.-')
     
 #%%  
 
 datos2.append(data)
 
 #%% Medir con varios canales. HAY QUE PENSAR QUE SEÑAL LE MANDAMOS PARA QUE SE VEA LA DIFERENCIA. 
-
+fs = 20000
 samples = 1000
-data = np.zeros([2,samples]) #row: channel / column: sample
+
+
 with nidaqmx.Task() as task:
-    task.in_stream.channels_to_read("Dev1/ai1","Dev1/ai0") #como catso llamo a los canales?
-    nidaqmx.stream_readers.AnalogMultiChannelReader.read_many_sample(data,number_of_samples_per_channel=samples) #esta función va llenando el numpy array con las mediciones. En las filas el channel, en las columnas las mediciones: una por sample. 
+    ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+    ai0.ai_gain=1
+    ai1 = task.ai_channels.add_ai_voltage_chan("Dev3/ai1",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+    ai1.ai_gain=1
+    #task.start()
+    task.timing.cfg_samp_clk_timing(fs) # seteo la frecuencia de muestreo
+    data = task.read(number_of_samples_per_channel=samples)
+    #print(data)
+    plt.plot(np.arange(samples)/fs, data[0],'.-')
+    plt.plot(np.arange(samples)/fs, data[1],'.-')
+
+## voy a medir la amplitud máxima para ver que tan 1 es la ganancia 1 y tener esto caracterizado para un sensor.
+    
+import scipy.signal as sp
+peaks = sp.find_peaks_cwt(data[0],np.arange(1,50))
+d = np.asarray(data[0])
+plt.plot(peaks/fs,d[peaks],'o-')
+peaks2 = sp.find_peaks_cwt(data[1],np.arange(1,50))
+dd = np.asarray(data[1])
+plt.plot(peaks2/fs,dd[peaks2],'o-')
+
+
+#%%
+ampp=np.mean(d[peaks])
+ampp2=np.mean(dd[peaks2])
+print(ampp)
+print(ampp2)
+amp.append(ampp)
+amp2.append(ampp2)
 
 
 
+#%% Medir con varios canales. HAY QUE PENSAR QUE SEÑAL LE MANDAMOS PARA QUE SE VEA LA DIFERENCIA. 
+fs = 20000
+samples = 1000
 
-
-
+with nidaqmx.Task() as task:
+    ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+    ai0.ai_gain=1
+    ai1 = task.ai_channels.add_ai_voltage_chan("Dev3/ai1",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+    ai1.ai_gain=1
+    #task.start()
+    task.timing.cfg_samp_clk_timing(fs) # seteo la frecuencia de muestreo
+    data = task.read(number_of_samples_per_channel=samples)
+    #print(data)
+    plt.plot(np.arange(samples)/fs, data[0],'.-')
+    plt.plot(np.arange(samples)/fs, data[1],'.-')
 
 
 
