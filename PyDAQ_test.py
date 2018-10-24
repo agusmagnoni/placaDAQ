@@ -11,7 +11,7 @@ import numpy as np
 
 d_fs = 48000
 d_chunk = 1000
-d_device = 'Dev1'
+d_device = 'Dev3'
 d_channel = 'ai0'
 d_gain = 1
 # Modo_RSE = nidaqmx.constants.TerminalConfiguration(10083)
@@ -26,6 +26,7 @@ if not system.devices:
 def listaDispositivos():
     system = nidaqmx.system.System.local()
     if system.devices:
+        print(system.devices)
         for device in system.devices:
             print(device)
     else:
@@ -41,21 +42,30 @@ def adquirir1canal(gain = d_gain, device = d_device, channel = d_channel, chunk=
         plt.plot(np.arange(chunk)/fs, data,'.-')
     return data
 
-def muestreoVariandoFs (f_ini = 100, f_fin = d_fs*1000, puntos = 1000, plot=False):
+def muestreoVariandoFs (f_ini = 100, f_fin = d_fs, puntos = 50, plot=False):
     # Falta verificar la frecuencia maxima del dispositivo.
-    frecuencias_sampleo = np.logspace(f_ini,f_fin,puntos)
+    frecuencias_sampleo = np.linspace(f_ini,f_fin,puntos)
     frecs_medidas = []
+    k=0
+    medfrec=[]
     for frec_sampleo in frecuencias_sampleo:
+        print(k)
         # Es importante limitar el tiempo a travez del tamaño del chunk
         tiempo_max = 1 # En segundos
-        chunk = min(1000,tiempo_max*frec_sampleo)
+        chunk = 1000
         data = adquirir1canal(chunk=chunk, fs=frec_sampleo)
         fft = np.abs(np.fft.fft(data))
-        x = np.array(len(data))
+        x = np.arange(len(data))
         x = x * len(x)/frec_sampleo
+        k=k+1
+        medfrec.append(data)
         if plot:
-            plt.plot(x,t, '.-')
+            #plt.plot(x,fft, '.-')
+            plt.plot(np.arange(chunk)/frec_sampleo,data)
         frecs_medidas += x[np.argmax(fft)]
-    if plot:
-        plt.plot(frecuencias_sampleo,frecs_medidas, '.-')
-        
+    #if plot:
+     #   plt.plot(frecuencias_sampleo,frecs_medidas, '.-')
+    return medfrec, frecuencias_sampleo, chunk
+
+#%% WRITE
+    

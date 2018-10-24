@@ -88,31 +88,55 @@ amp2.append(ampp2)
 
 
 #%% Medir con varios canales. HAY QUE PENSAR QUE SEÑAL LE MANDAMOS PARA QUE SE VEA LA DIFERENCIA. 
-fs = 20000
+fs = 48000
 samples = 1000
-
+plt.close('all')
 with nidaqmx.Task() as task:
-    ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
-    ai0.ai_gain=1
+    #ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+    #ai0.ai_gain=1
     ai1 = task.ai_channels.add_ai_voltage_chan("Dev3/ai1",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
     ai1.ai_gain=1
     #task.start()
     task.timing.cfg_samp_clk_timing(fs) # seteo la frecuencia de muestreo
     data = task.read(number_of_samples_per_channel=samples)
     #print(data)
-    plt.plot(np.arange(samples)/fs, data[0],'.-')
-    plt.plot(np.arange(samples)/fs, data[1],'.-')
+    plt.plot(np.arange(samples)/fs, data,'.-')
+    #plt.plot(np.arange(samples)/fs, data[1],'.-')
 
 
 
+#%% read and write
+
+##with nidaqmx.Task() as task:
+#    ao = task.ao_channels.add_ao_voltage_chan("Dev3/ao0")
+#    ao.ao_max = 5
+#    ao.ao_min=0
+#    #ao.ao_output_type(nidaqmx.constants.AOPowerUpOutputBehavior(10322)) #voltage output
+#    #ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+#    #fs=
+#    #t=np.arange(long*fs)
+#    #amp*np.sin(2*np.pi*frec*t/self.fs)
+#    data = [0]*1000 + [1]*1000 + [2]*1000
+#    task.write(data)
+#
+#    task.start()
+#    task.stop()
 
 
+#with nidaq
 
-
-
-
-
-
+task = nidaqmx.Task()
+ao = task.ao_channels.add_ao_voltage_chan("Dev3/ao0")
+ao.ao_max = 5
+ao.ao_min=0
+#ao.ao_output_type(nidaqmx.constants.AOPowerUpOutputBehavior(10322)) #voltage output
+#ai0 = task.ai_channels.add_ai_voltage_chan("Dev3/ai0",terminal_config = nidaqmx.constants.TerminalConfiguration(10083))
+#fs=
+#t=np.arange(long*fs)
+#amp*np.sin(2*np.pi*frec*t/self.fs)
+data = [0]*1000 + [1]*1000 + [2]*1000
+task.write(data)
+task.start()
 
 
 
