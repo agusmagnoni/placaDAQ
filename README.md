@@ -25,7 +25,7 @@ Relavancia: Alta
 Prioridad: Media.
 
 ### Pasar en limpio los codigos que ya hay ###
-Estado: Sin empezar.
+Estado: Hecho.
 Expectativas: Deberia ser corto, pero esta bueno tener las funciones moduladas y faciles de llamar.
 Relevancia: Media
 Prioridad: Alta.
@@ -35,7 +35,7 @@ Prioridad: Alta.
 ### Barrido automatico de frecuencuas ###
 Descripcion: Hacer un codigo que barra en frecuencias y vea el problema de muestreo cuando las frecuencia de adquisicion se acerca a la que se desea medir. Se puede hacer generando con un generador externo y variar la de muestreo. Es la opcion mas facil y compatible con el desarrollo actual del soft. Si tuvieramos andando la generacion y la frecuencia de muestreo fuese diferente de la de generacion podriamos variar ambas y ver que onda.
 
-Estado: Para la version simple hay codigo para hacerlo solo hay que agregar el loop.
+Estado: Para la version simple hay codigo para hacerlo solo hay que agregar el loop. Hecho el codigo.
 Expectativa: Tiene sentido hacer la version simple y dejar lo otro eventualmente para mas adelante.
 Relevancia: Media
 Prioridad: Media.
