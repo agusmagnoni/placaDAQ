@@ -1,0 +1,6 @@
+- Creo el archivo PyDAQ.py donde cargar los codigos listos.
+- Creo el notebook Test donde realizar tests de los codigos creados.
+- Mando todo lo que parece codigos y datos almacenados para el estudio de la frecuencia a una carpeta de MedicionesYDatos
+- Anoto en el readme el estado actual de las intenciones y planes
+- Empiezo a pasar a funciones las cosas.
+- Pase una funcion para medir y otra para hacer el barrido en frecuencias. Como no puedo probar lo codigos es complicado saber si esta bien hecho. Creo que el resto es redundante.

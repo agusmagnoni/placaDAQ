@@ -17,6 +17,8 @@ for device in system.devices:
     print(device)
     #device.reset_device()#si quiero resetear los settings del chabon este
 
+# Pasado
+    
 #%%Resolución
 #Mientras mandamos una rampa muy lenta
 #ai0 y ai1 son los dos inputs analógicos del DAQ
