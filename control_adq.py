@@ -10,14 +10,14 @@ import PyDAQ
 import control
 import matplotlib.pyplot as plt
 
-setpoint = 0.1
-
 
 #%% SOLO PROPORCIONAL
 
-lazo1 = control.PIDController(setpoint, kp=5.0, ki=2.0, kd=5.0,tau_i=10000)
+setpoint = 0.1
 
-for i in range(200):
+lazo1 = control.PIDController(setpoint, kp=10.0, ki=10.0, kd=0,tau_i=10000)
+
+for i in range(500):
     data = PyDAQ.adquirir1canal()
     medicion = np.mean(data)
     senal = lazo1.calculate(medicion)
@@ -33,5 +33,6 @@ np.savez('proporcional_k50.npz',medicion = lazo1.medicion_t,error = lazo1.error_
 
 
 #%%
-np.savez('PID_5_2_2.npz', medicion = lazo1.medicion_t,error = lazo1.error_t, senal = lazo1.out_t, p = lazo1.p_term_t, i = lazo1.i_term_t, d = lazo1.d_term_t)
+np.savez('PID_ruido_1_5_5.npz', medicion = lazo1.medicion_t,error = lazo1.error_t, senal = lazo1.out_t, p = lazo1.p_term_t, i = lazo1.i_term_t, d = lazo1.d_term_t)
+
 

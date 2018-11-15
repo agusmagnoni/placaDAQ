@@ -21,10 +21,10 @@ for device in system.devices:
 #%% 
     
 with nidaqmx.Task() as task:
-    ao = task.ao_channels.add_ao_voltage_chan("Dev5/ao0")
+    ao = task.ao_channels.add_ao_voltage_chan("Dev4/ao0")
     ao.ao_max = 5
     ao.ao_min=0
-    data = [0]*100
+    data = [3]*100
     task.write(data,auto_start=True)
 
 
@@ -37,10 +37,10 @@ gain = 10
 senhal = 2
 while True:
     with nidaqmx.Task() as task:
-        ao = task.ao_channels.add_ao_voltage_chan("Dev5/ao0")
+        ao = task.ao_channels.add_ao_voltage_chan("Dev4/ao0")
         ao.ao_max = 5
         ao.ao_min=0
-        data = [senhal]*100
+        data = senhal
         task.write(data,auto_start=True)
     data = daq.adquirir1canal()
     value = np.mean(data)
@@ -55,7 +55,7 @@ Vins = np.linspace(0,5,num = 100)
 Vouts = np.zeros(len(Vins))
 for Vin , i in zip(Vins,range(len(Vins))):
     with nidaqmx.Task() as task:
-        ao = task.ao_channels.add_ao_voltage_chan("Dev5/ao0")
+        ao = task.ao_channels.add_ao_voltage_chan("Dev4/ao0")
         ao.ao_max = 5
         ao.ao_min=0
         task.write(Vin,auto_start=True)

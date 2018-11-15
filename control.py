@@ -11,7 +11,7 @@ import time
 
 class PIDController:
 
-    def __init__(self, setpoint, kp=1.0, ki=0.0, kd=0.0,tau_i=10000):
+    def __init__(self, setpoint, kp=1.0, ki=0.0, kd=0.0,tau_i=10000,clamp=True,s_min=0,s_max=5):
 
         self.setpoint = setpoint
         self.kp = kp
@@ -19,6 +19,9 @@ class PIDController:
         self.kd = kd
         self.time_init = time.time()
         self.tau_i = tau_i #iteraciones que entran en la integral
+        self.clamp = clamp
+        self.s_min = s_min
+        self.s_max = s_max
         
         self.current_time = 0
         self.last_time = self.time_init
@@ -50,29 +53,19 @@ class PIDController:
         delta_error = self.error - self.last_error
         
         self.p_term = self.kp * self.error
-        #### integración de los últimos tau_i pasos.
-        #if len(self.i_term_t)>self.tau_i:
-        #    self.i_term += self.error*self.dt-self.i_term_t[-self.tau_i]
-        #else:
-        #    self.i_term += self.error*self.dt
-        
-        self.i_term += self.error
-        self.d_term = delta_error
+        self.i_term += self.error * self.ki
+        self.d_term = delta_error * self.kd
 
         self.last_error = self.error
         
-        self.senal = self.p_term + (self.ki * self.i_term) + (self.kd * self.d_term)
-        if 5>self.senal>0:
-            self.out = self.senal
-        elif self.senal<0:
-            self.out = 0
-        else:
-            self.out = 5
+        self.senal = self.p_term + self.i_term + self.d_term
         
-        
+        if self.clamp:
+            self.senal = np.clip(self.senal,self.s_min,self.s_max)
+            
         ## guardo
         self.medicion_t.append(medicion)
-        self.out_t.append(self.out)
+        self.out_t.append(self.senal)
         self.error_t.append(self.error)
         self.p_term_t.append(self.p_term)
         self.i_term_t.append(self.i_term)
@@ -80,7 +73,7 @@ class PIDController:
         self.tiempos.append(self.current_time-self.time_init)
         self.last_time=self.current_time
 
-        return self.out
+        return self.senal
     
     def plots(self, medicion = True, senal = True, error = True, p_term = True, i_term = True, d_term = True):
         nrows = medicion + senal + error + p_term + i_term + d_term

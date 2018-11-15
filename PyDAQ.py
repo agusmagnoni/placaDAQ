@@ -11,7 +11,7 @@ import numpy as np
 
 d_fs = 48000
 d_chunk = 1000
-d_device = 'Dev4'
+d_device = 'Dev6'
 d_channel = 'ai1'
 out_channel = 'ao0'
 d_gain = 1
